@@ -32,18 +32,21 @@ class CouchbaseClient(object):
             raise
 
         self._bucket = self._cluster.bucket(self.bucket_name)
-        # try:
-        #     # create index if it doesn't exist
-        #     createIndexProfile = f"CREATE PRIMARY INDEX default_profile_index ON {self.bucket_name}.{self.scope_name}.{self.collection_name}"
-        #     createIndex = f"CREATE PRIMARY INDEX ON {self.bucket_name}"
-
-        #     self._cluster.query(createIndexProfile).execute()
-        #     self._cluster.query(createIndex).execute()
-        # except CouchbaseException as e:
-        #     print("Index already exists")
-        # except Exception as e:
-        #     print(f"Error: {type(e)}{e}")
+        try:
+            # create index if it doesn't exist
+            # self._create_indexes()
+            pass
+        except CouchbaseException as e:
+            print("Index already exists")
+        except Exception as e:
+            print(f"Error: {type(e)}{e}")
         print('Connection complete')
+    
+    def _create_indexes(self):
+        createIndexProfile = f"CREATE PRIMARY INDEX default_profile_index ON {self.bucket_name}"
+        createIndex = f"CREATE PRIMARY INDEX ON {self.bucket_name}"
+        self._cluster.query(createIndexProfile).execute()
+        self._cluster.query(createIndex).execute()
 
     def ping(self):
         try:
